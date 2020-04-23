@@ -1,14 +1,10 @@
 import 'package:testWebApp/models/articlesHolder.dart';
-
-import './screens/cart.dart';
-import './screens/catalog.dart';
-import './screens/login.dart';
+import 'package:testWebApp/screens/article-detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'common/theme.dart';
-import 'models/cart.dart';
-import 'models/catalog.dart';
+
 import 'screens/home.dart';
 
 void main() {
@@ -30,7 +26,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => Home(),
-          '/cart': (context) => MyCart(),
+          '/article': (context) => ArticleDetail(),
         },
       ),
     );

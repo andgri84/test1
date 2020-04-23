@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:testWebApp/models/article.dart';
 import 'package:testWebApp/services/api.dart';
 
-import 'catalog.dart';
 
 class ArticlesHolder extends ChangeNotifier {
 
@@ -12,11 +11,15 @@ class ArticlesHolder extends ChangeNotifier {
   ArticlesHolder()
   {
     var api= new Api();
-    api.getHeadlines().then((value)=>articles=value);
+    api.getHeadlines("general").then((value)=>articles=value);
     notifyListeners();
   }
 
-  
+  changeCategory(String category){
+    var api= new Api();
+    api.getHeadlines(category).then((value)=>articles=value);
+    notifyListeners();
+  }
  
 
   void set articles(List<Article> news)

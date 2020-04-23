@@ -1,84 +1,88 @@
-// Copyright 2019 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'package:testWebApp/models/article.dart';
+import 'package:testWebApp/components/news-card.dart';
 import 'package:testWebApp/models/articlesHolder.dart';
 
-import '../models/cart.dart';
-import '../models/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testWebApp/services/favourites.dart';
 
 class Home extends StatelessWidget {
+  var isLargeScreen = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("News"),
-        
-      ),
-      body: Consumer<ArticlesHolder>(
-              builder: (context, news, child) {
-                return ListView.builder(
-                    itemCount: news.articles.length,
-                    itemBuilder: (context, position) =>
-                        NewsCard(news.articles[position]));
-              },
-            )
-    );
+        appBar: AppBar(
+          title: Text("News"),
+        ),
+        body: OrientationBuilder(builder: (context, orientation) {
+          if (MediaQuery.of(context).size.width >= 768) {
+            isLargeScreen = true;
+          } else {
+            isLargeScreen = false;
+          }
+
+          return Column(
+            children: <Widget>[
+              NewsButtons(),
+              Consumer<ArticlesHolder>(
+                builder: (context, news, child) {
+                  if (isLargeScreen) {
+                    return Expanded(
+                        child: GridView.count(
+                      crossAxisCount: 3,
+                      children: new List<Widget>.generate(news.articles.length,
+                          (index) {
+                        return NewsCard(news.articles[index]);
+                      }),
+                    ));
+                  } else {
+                    return Expanded(
+                        child: ListView.builder(
+                            itemCount: news.articles.length,
+                            itemBuilder: (context, position) =>
+                                NewsCard(news.articles[position])));
+                  }
+                },
+              )
+            ],
+          );
+        }));
   }
 }
 
-
-
-class NewsCard extends StatelessWidget {
-  final Article article;
-
-  NewsCard(this.article, {Key key}) : super(key: key);
+class NewsButtons extends StatelessWidget {
+  NewsButtons({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var categories = [
+      'general',
+      'entertainment',
+      'health',
+      'favourites'
     
-    var textTheme = Theme.of(context).textTheme.title;
-
-    return Card(
-          semanticContainer: true,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          child:
-            Stack(
-              
-                children: <Widget>[
-                    Image.network(
-                  article.urlToImage,
-                  fit: BoxFit.fill,
-                ),
-                      Positioned(
-                      left: 5,
-                      bottom: 5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                         
-                            Text(article.title,style:TextStyle(color: Colors.white)),
-                            Text(article.publishedAt,style:TextStyle(color: Colors.white))
-                        ],
-                      )
-                    ),
-                
-                
-                ]
-            )
-           ,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          elevation: 5,
-          margin: EdgeInsets.all(10),
-        );
+    ];
+    final Favourites favMgr= new Favourites();
+    
+    return ButtonBar(
+      alignment: MainAxisAlignment.center,
+        children: new List<Widget>.generate(categories.length, (index) {
+      return FlatButton(
+        child: Text(categories[index]),
+        color: Colors.blue,
+        onPressed: () async{
+            if(categories[index]=='favourites')
+            {
+                var articles=await favMgr.getAllFavouriteArticles();
+                var holder=Provider.of<ArticlesHolder>(context, listen: false);
+                holder.articles=articles;
+            }
+            else
+            {
+                Provider.of<ArticlesHolder>(context, listen: false).changeCategory(categories[index]);
+            }
+             
+        },
+      );
+    }));
   }
 }
-
-
