@@ -15,8 +15,8 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: new BimbyBar(
         title: widget.title,
+        appBar:AppBar(automaticallyImplyLeading: false,)
       ),
-
       bottomNavigationBar: BimbyFooter(),
       body: Container(
         color: Colors.grey[100],
@@ -39,56 +39,61 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             )),
-            SizedBox(height:10),
-            Stack(children: <Widget>[
-              ContainerBox(
-                child: Row(
+            SizedBox(height: 10),
+            Stack(
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                ContainerBox(
+                    child: Row(
                   children: <Widget>[
-                    Text("Lista clienti",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green)),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 5,
-                      ),
-                      child: Text(
-                        "Accedi alla tua lista clienti",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Lista clienti",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green)),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 5,
+                          ),
+                          child: Text(
+                            "Accedi alla lista clienti. ",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
+                )),
+                Positioned(
+                  top: 15,
+                  bottom: 0,
+                  right: 60,
+                  child: Text(
+                    "", //bimby-Lista-clienti
+                    style: TextStyle(
+                        fontFamily: 'Bimby', fontSize: 30, color: Colors.green),
+                  ),
                 ),
-                Text(
-                  "", //bimby-Profile
-                  style: TextStyle(fontFamily: 'Bimby'),
-                ),
-                
-
-              
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: InkWell(
+                        child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                            ),
+                            child:
+                                Icon(Icons.arrow_forward, color: Colors.white)),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/list');
+                        }))
               ],
-            ))
-            ,
-            Positioned(
-              top: 0,
-              bottom: 0,
-              right:0,
-              child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                        ),
-                        child: Icon(Icons.arrow_forward, color: Colors.white)) ,
             )
-            
-            ]
-            ,)
-
-            
           ],
         ),
       ),
@@ -103,7 +108,6 @@ class ContainerBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
           BoxShadow(
               color: Colors.grey, offset: Offset(0.0, 1.0), blurRadius: 10.0)
