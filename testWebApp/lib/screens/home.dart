@@ -3,6 +3,7 @@ import 'package:testWebApp/models/articlesHolder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testWebApp/services/db.repo.dart';
 import 'package:testWebApp/services/favourites.dart';
 
 class Home extends StatelessWidget {
@@ -61,7 +62,8 @@ class NewsButtons extends StatelessWidget {
       'favourites'
     
     ];
-    final Favourites favMgr= new Favourites();
+    
+    final DbRepository _dbRepository = DbRepository();
     
     return ButtonBar(
       alignment: MainAxisAlignment.center,
@@ -72,7 +74,7 @@ class NewsButtons extends StatelessWidget {
         onPressed: () async{
             if(categories[index]=='favourites')
             {
-                var articles=await favMgr.getAllFavouriteArticles();
+                var articles= _dbRepository.getArticles();
                 var holder=Provider.of<ArticlesHolder>(context, listen: false);
                 holder.articles=articles;
             }
